@@ -49,11 +49,11 @@ const createOnShouldStartLoadWithRequest = (
   return ({ nativeEvent }: ShouldStartLoadRequestEvent) => {
     let shouldStart = true;
     const { url, lockIdentifier } = nativeEvent;
-
+    
     if (!passesWhitelist(compileWhitelist(originWhitelist), url)) {
       try {
-        let r = Linking.openURL(url);
-        return r;
+        Linking.openURL(url);
+        shouldStart = false;
       }
       catch {
           console.warn(`Can't open url: ${url}`);
@@ -62,7 +62,6 @@ const createOnShouldStartLoadWithRequest = (
     } else if (onShouldStartLoadWithRequest) {
       shouldStart = onShouldStartLoadWithRequest(nativeEvent);
     }
-
     loadRequest(shouldStart, url, lockIdentifier);
   };
 };
